@@ -109,9 +109,9 @@ class TypeInformation {
          */
         List<ObjectField> filterByDependent(ObjectField field, List<ObjectField> allFields) {
             String[] dependencyFields = new FieldOptionsManager(field.getField()).getDependencies().getFields();
-            List<ObjectField> filteredList =  allFields.stream().filter(allField ->  Arrays.asList(dependencyFields).contains(allField.getName()))
+            return allFields.stream().filter(allField ->  Arrays.asList(dependencyFields).contains(allField.getName()))
                     .collect(Collectors.toList());
-            return filteredList;
+            
         }
         
         
