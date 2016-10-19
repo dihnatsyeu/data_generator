@@ -8,5 +8,7 @@ public enum FieldDataType {
     STRING,
     BOOLEAN,
     COLLECTION,
-    DATE
+    DATE,
+    LONG
+    
 }

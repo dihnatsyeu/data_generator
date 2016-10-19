@@ -1,12 +1,11 @@
 package data_for_entity.data_providers;
 
-
-import java.util.Random;
+import org.apache.commons.lang.math.RandomUtils;
 
 public class BooleanData implements EntityDataProvider {
     
     @Override
     public Object generate(int length) {
-        return new Random().nextBoolean();
+        return RandomUtils.nextBoolean();
     }
 }

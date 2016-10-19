@@ -11,7 +11,6 @@ public class DependencyData {
     
     private HashMap<String, String> fieldValues = new HashMap<>();
     
-    
     public Collection<String> getValues() {
         return fieldValues.values();
     }
@@ -20,7 +19,7 @@ public class DependencyData {
         fieldValues.put(name, value);
     }
     
-    public String getData(String name) {
+    public Object getData(String name) {
         return fieldValues.get(name);
     }
 }

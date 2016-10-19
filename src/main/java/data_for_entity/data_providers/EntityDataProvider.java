@@ -5,8 +5,5 @@ package data_for_entity.data_providers;
  */
 public interface EntityDataProvider {
     
-    int dataLength = 10;
-    int collectionLength = 1;
-    
     Object generate(int length);
 }

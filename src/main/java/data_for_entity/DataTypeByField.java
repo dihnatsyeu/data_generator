@@ -9,7 +9,7 @@ import java.util.HashMap;
  * {@link FieldDataType} is used further to determine {@link data_for_entity.data_providers.EntityDataProvider}
  * based on field type.
  * */
-public class DataTypeByField {
+class DataTypeByField {
     
     
     private static HashMap<Class<?>, FieldDataType> dataTypeHashMap = new HashMap<>();
@@ -19,7 +19,8 @@ public class DataTypeByField {
         dataTypeHashMap.put(byte.class, FieldDataType.NUMERIC);
         dataTypeHashMap.put(short.class, FieldDataType.NUMERIC);
         dataTypeHashMap.put(long.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(Integer.class, FieldDataType.NUMERIC);
+        dataTypeHashMap.put(Long.class, FieldDataType.NUMERIC);
+        dataTypeHashMap.put(Integer.class, FieldDataType.LONG);
         dataTypeHashMap.put(float.class, FieldDataType.NUMERIC);
         dataTypeHashMap.put(double.class, FieldDataType.NUMERIC);
         dataTypeHashMap.put(boolean.class, FieldDataType.BOOLEAN);
@@ -35,3 +36,4 @@ public class DataTypeByField {
         
     }
 }
+
