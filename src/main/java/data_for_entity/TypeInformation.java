@@ -104,11 +104,14 @@ class TypeInformation {
         /**
          * Filter list of dependent fields against this field.
          * @param field to search for dependent fields against.
+         * @param allFields list of fields to filter.
          * @return list of {@link ObjectField}
          */
-        List<ObjectField> filterByDependent(ObjectField field) {
-            String[] objectFields = new FieldOptionsManager(field.getField()).getDependencies().getFields();
-            return getFields(objectFields);
+        List<ObjectField> filterByDependent(ObjectField field, List<ObjectField> allFields) {
+            String[] dependencyFields = new FieldOptionsManager(field.getField()).getDependencies().getFields();
+            List<ObjectField> filteredList =  allFields.stream().filter(allField ->  Arrays.asList(dependencyFields).contains(allField.getName()))
+                    .collect(Collectors.toList());
+            return filteredList;
         }
         
         
