@@ -43,7 +43,7 @@ class AnnotationReader {
     Class<? extends DependencyDataProvider> getDependencyProvider() {
         WithDataDependencies dataDependencies = readAnnotation(WithDataDependencies.class);
         if (dataDependencies!=null) {
-            dataDependencies.provider();
+            return dataDependencies.provider();
         }
         return null;
         

@@ -9,6 +9,12 @@ import java.util.*;
 public class RandomGenerator {
 
     private static Logger log = Logger.getLogger(RandomGenerator.class);
+    
+    
+    public static int generateRandomInteger(int minNumber, int maxNumber) {
+        Random random = new Random();
+        return random.nextInt((maxNumber-minNumber)+1) + minNumber;
+    }
 
     public static LinkedHashSet<String> generatePhones(int maxPhones) {
 
