@@ -18,8 +18,4 @@ public class DependencyData {
     public void insertData(String name, String value) {
         fieldValues.put(name, value);
     }
-    
-    public Object getData(String name) {
-        return fieldValues.get(name);
-    }
 }

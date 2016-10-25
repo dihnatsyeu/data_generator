@@ -39,13 +39,12 @@ class ObjectField {
      * @param value Value that should be set.
      */
     void setValue(Object object, Object value) {
-        try {
-            BeanUtils.setProperty(object, field.getName(), value);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            ErrorReporter.reportError(e);
-            logger.debug(String.format("Cannot set value %s for field: %s due to error", value, field.getName()));
-        }
-        
+            try {
+                BeanUtils.setProperty(object, field.getName(), value);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                ErrorReporter.reportError(e);
+                logger.debug(String.format("Cannot set value %s for field: %s due to error", value, field.getName()));
+            }
     }
     
     /**
@@ -55,15 +54,14 @@ class ObjectField {
      * error occurred.
      */
     String getValue(Object object) {
-        try {
-            return BeanUtils.getProperty(object, field.getName());
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            ErrorReporter.reportError(e);
-            logger.debug(String.format("Cannot get value of field with name: %s for object: %s",
-                    field.getName(), object));
-            return null;
-        }
-        
+            try {
+                return BeanUtils.getProperty(object, field.getName());
+            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                ErrorReporter.reportError(e);
+                logger.debug(String.format("Cannot get value of field with name: %s for object: %s",
+                        field.getName(), object));
+                return null;
+            }
     }
     
 }
