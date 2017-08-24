@@ -1,11 +1,8 @@
 package data_for_entity;
 
 import error_reporter.ErrorReporter;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -18,6 +15,7 @@ class ObjectField {
     private Logger logger = Logger.getLogger(ObjectField.class);
     
     ObjectField(Field field) {
+        field.setAccessible(true);
         this.field = field;
     }
     
@@ -39,12 +37,16 @@ class ObjectField {
      * @param value Value that should be set.
      */
     void setValue(Object object, Object value) {
-            try {
-                BeanUtils.setProperty(object, field.getName(), value);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                ErrorReporter.reportError(e);
-                logger.debug(String.format("Cannot set value %s for field: %s due to error", value, field.getName()));
-            }
+        if (value == null) {
+            logger.debug("Value for field:"+ field.getName() + " is null. Skipping...");
+            return;
+        }
+        try {
+            field.set(object, value);
+        } catch (IllegalAccessException e) {
+            ErrorReporter.reportError(e);
+            logger.debug(String.format("Cannot set value %s for field: %s due to error", value, field.getName()));
+        }
     }
     
     /**
@@ -53,15 +55,14 @@ class ObjectField {
      * @return String representation of value or null if
      * error occurred.
      */
-    String getValue(Object object) {
+    Object getValue(Object object) {
             try {
-                return BeanUtils.getProperty(object, field.getName());
-            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                return field.get(object);
+            } catch (IllegalAccessException e) {
                 ErrorReporter.reportError(e);
                 logger.debug(String.format("Cannot get value of field with name: %s for object: %s",
                         field.getName(), object));
                 return null;
             }
     }
-    
 }

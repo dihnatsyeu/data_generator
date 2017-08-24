@@ -6,9 +6,7 @@ import data_for_entity.instance_managers.InstanceManager;
 import data_for_entity.provider_resolver.ProviderResolver;
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -19,6 +17,11 @@ class ObjectAggregator {
     private Logger logger = Logger.getLogger(ObjectAggregator.class);
     private FieldsCollection fieldsCollection = new FieldsCollection();
     private InstanceManager instanceManager = new DefaultInstanceManager();
+    private static List<Object> emptyValues = new ArrayList<>();
+    static {
+        emptyValues.add(0);
+        emptyValues.add(null);
+    }
     
     
     void setInstanceManager(InstanceManager manager) {
@@ -33,13 +36,11 @@ class ObjectAggregator {
      * @return object of passed objectType with populated data.
      */
     Object generateObjectFields(Class<?> objectType) {
+        fieldsCollection.newCollection();
         fieldsCollection.collectFieldsByType(objectType);
-        logger.debug("Searching for required fields");
         List<ObjectField> requiredFields = fieldsCollection.createFieldsFilter().filterByRequired();
         Object instance = instanceManager.createInstance(objectType);
         if ((requiredFields == null) || requiredFields.size() == 0) {
-            logger.debug("There are no required fields for entity: " + instance +
-                    "Instance will be returned as it is");
             return instance;
         }
         TasksExecutor executor = new TasksExecutor();
@@ -52,7 +53,6 @@ class ObjectAggregator {
         if (!tasksCompleted) {
             logger.warn("Not all fields are generated! View debug logs for details");
         }
-        logger.info("Object is created with filled fields");
         return instance;
     }
     
@@ -61,7 +61,7 @@ class ObjectAggregator {
      * based on field's options or field type. Fields options have higher priority in defining of a value.
      */
     private class FieldAggregator implements Runnable {
-    
+
         private final ObjectField field;
         private Object instance;
         private FieldOptionsManager fieldOptions;
@@ -71,9 +71,7 @@ class ObjectAggregator {
             this.instance = instance;
             this.fieldOptions = new FieldOptionsManager(objectField.getField());
         }
-    
-      
-    
+
         /**
          * algorithm that defines rules for populating field with value.
          * If field has dependencies, first those fields should be populated.
@@ -83,17 +81,16 @@ class ObjectAggregator {
         public void run() {
             logger.debug("Generating value for required field:" + field.getName());
             synchronized (field) {
-                if (field.getValue(instance) != null) {
+                if (!emptyValues.contains(field.getValue(instance))) {
                     logger.debug("Field: " + field.getName() + " already has value. Skipping...");
                     return;
                 }
                 //if field has dependencies, first those fields will initialized with values
                 if (fieldOptions.hasDependencies()) {
-                    logger.debug("Found dependencies flag for field.");
                     List<ObjectField> dependenceFields = fieldsCollection.createFieldsFilter().
                             filterByDependentFields(fieldOptions.getDependencies().getFields());
                     if (dependenceFields == null) {
-                        logger.debug("Cannot fill in dependencies as fields are not found!");
+                        logger.debug("Cannot fill in dependencies as fields are not found for field" + field.getName());
                         logger.debug(String.format("Field %s is skipped", field.getName()));
                         return;
                     }
@@ -107,19 +104,14 @@ class ObjectAggregator {
                 Class<?> classType = field.getField().getType();
                 FieldData dataGenerator;
                 if (Helpers.isCollection(classType)) {
-                    logger.debug("Field type is recognized as collection");
                     dataGenerator = new CollectionFieldData();
                 } else if (Helpers.isMap(classType)) {
-                    logger.debug("Field type is recognized as map");
                     dataGenerator = new MapFieldData();
                 } else  {
-                    logger.debug("Field type is recognized as unit");
                     dataGenerator = new FieldData();
                 }
-                
                 Object value = dataGenerator.generateData();
                 field.setValue(instance, value);
-    
                 }
             }
     
@@ -142,11 +134,10 @@ class ObjectAggregator {
                 EntityDataProvider provider = dependencyResolver.getProvider();
                 Object value;
                 if (provider == null) {
-                    logger.debug("Provider is not recognized by field's type." +
+                    logger.debug("Provider is not recognized for field:" +field.getName()+ " by field's type." +
                             "Generating java bean as value");
                     value = generateObjectFields(classType);
                 } else {
-                    logger.debug("Generating value from provider");
                     int dataLength = fieldOptions.getDataSize();
                     value = provider.generate(dataLength);
                 }
@@ -157,7 +148,6 @@ class ObjectAggregator {
             Object generateData() {
                 return generateSingleData(field.getField().getType());
             }
-            
         }
     
         /**
@@ -172,7 +162,7 @@ class ObjectAggregator {
                 try {
                     collection = (Collection) instanceManager.createInstance(objectClass);
                 } catch (Error er) {
-                    logger.debug("Error occurred when creating instance of a collection. Might collection" +
+                    logger.error("Error occurred when creating instance of a collection. Might collection" +
                             " is abstract or is an interface. Examine logs for further details." +
                             "You must declare exact implementation class as a type!");
                     return null;
@@ -212,6 +202,6 @@ class ObjectAggregator {
             }
         }
     }
-    
+
     
 }

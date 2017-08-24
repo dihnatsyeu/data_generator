@@ -9,13 +9,13 @@ import java.util.HashMap;
  */
 public class DependencyData {
     
-    private HashMap<String, String> fieldValues = new HashMap<>();
+    private HashMap<String, Object> fieldValues = new HashMap<>();
     
-    public Collection<String> getValues() {
+    public Collection<Object> getValues() {
         return fieldValues.values();
     }
     
-    public void insertData(String name, String value) {
+    public void insertData(String name, Object value) {
         fieldValues.put(name, value);
     }
 }

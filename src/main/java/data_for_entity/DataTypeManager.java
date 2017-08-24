@@ -29,7 +29,9 @@ public class DataTypeManager {
         private static HashMap<FieldDataType, EntityDataProvider> providerHashMap = new HashMap<>();
         
         static {
-            providerHashMap.put(FieldDataType.DIGIT, new IntData());
+            providerHashMap.put(FieldDataType.DIGIT, new IntData(false, false));
+            providerHashMap.put(FieldDataType.DIGIT_BYTE, new IntData(true, false));
+            providerHashMap.put(FieldDataType.DIGIT_SHORT, new IntData(false, true));
             providerHashMap.put(FieldDataType.ALPHANUMERIC, new AlphaNumeric());
             providerHashMap.put(FieldDataType.BOOLEAN, new BooleanData());
             providerHashMap.put(FieldDataType.COLLECTION, null);

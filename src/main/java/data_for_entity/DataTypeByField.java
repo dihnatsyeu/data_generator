@@ -15,14 +15,14 @@ class DataTypeByField {
     private static HashMap<Class<?>, FieldDataType> dataTypeHashMap = new HashMap<>();
     
     static {
-        dataTypeHashMap.put(int.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(byte.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(short.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(long.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(Long.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(Integer.class, FieldDataType.LONG);
-        dataTypeHashMap.put(float.class, FieldDataType.NUMERIC);
-        dataTypeHashMap.put(double.class, FieldDataType.NUMERIC);
+        dataTypeHashMap.put(int.class, FieldDataType.DIGIT);
+        dataTypeHashMap.put(byte.class, FieldDataType.DIGIT_BYTE);
+        dataTypeHashMap.put(short.class, FieldDataType.DIGIT_SHORT);
+        dataTypeHashMap.put(long.class, FieldDataType.LONG);
+        dataTypeHashMap.put(Long.class, FieldDataType.LONG);
+        dataTypeHashMap.put(Integer.class, FieldDataType.DIGIT);
+        dataTypeHashMap.put(float.class, FieldDataType.NUMERIC_DECIMAL);
+        dataTypeHashMap.put(double.class, FieldDataType.NUMERIC_DECIMAL);
         dataTypeHashMap.put(boolean.class, FieldDataType.BOOLEAN);
         dataTypeHashMap.put(char.class, FieldDataType.STRING);
         dataTypeHashMap.put(String.class, FieldDataType.STRING);

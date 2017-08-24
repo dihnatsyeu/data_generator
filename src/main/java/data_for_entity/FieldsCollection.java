@@ -16,6 +16,10 @@ final class FieldsCollection {
     
     
     private List<ObjectField> fields;
+
+    public void newCollection() {
+        fields = new ArrayList<>();
+    }
     
     /**
      * Gets all declared fields
@@ -31,7 +35,10 @@ final class FieldsCollection {
      */
     void collectFieldsByType(Class<?> objectType) {
         ArrayList<Field> listFields = new ArrayList<>(Arrays.asList(objectType.getDeclaredFields()));
-        this.fields = fieldsToObjectFields(listFields);
+        if (objectType.getSuperclass() != null) {
+            collectFieldsByType(objectType.getSuperclass());
+        }
+        this.fields.addAll(fieldsToObjectFields(listFields));
     }
     
     
@@ -77,9 +84,7 @@ final class FieldsCollection {
         List<ObjectField> filterByDependentFields(String[] dependentFieldsNames) {
             return  fields.stream().filter(field ->  Arrays.asList(dependentFieldsNames).contains(field.getName()))
                     .collect(Collectors.toList());
-            
         }
-        
-        
+
     }
 }
