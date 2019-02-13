@@ -24,14 +24,14 @@ public class RandomEntities {
     
     
     private static Logger logger = Logger.getLogger(RandomEntities.class);
-    private static ObjectAggregator objectInitializer = new ObjectAggregator();
+    private  ObjectAggregator objectInitializer = new ObjectAggregator();
     
     /**
      * Sets passed InstanceManager. Object is used to create instance by passed
      * types. Must be set before calling randomEntity
      * @param instanceManager {@link InstanceManager} object.
      */
-    public static void setInstanceManager(InstanceManager instanceManager) {
+    public  void setInstanceManager(InstanceManager instanceManager) {
         objectInitializer.setInstanceManager(instanceManager);
     }
     
@@ -42,13 +42,13 @@ public class RandomEntities {
      * @param objectType Type of object to create.
      * @return object with passed type with filled fields.
      */
-    public static  <T>T randomEntity(Class<T> objectType) {
+    public   <T>T randomEntity(Class<T> objectType) {
         logger.info("Creating object with type: "+ objectType);
         return objectType.cast(objectInitializer.generateObjectFields(objectType));
        
     }
     
-    public static <T> List<T> randomEntities(Class<T> classType, int collectionSize) {
+    public  <T> List<T> randomEntities(Class<T> classType, int collectionSize) {
         ArrayList<T> objectsList = new ArrayList<>();
         for (int i=1; i<=collectionSize; i++) {
             objectsList.add(randomEntity(classType));
