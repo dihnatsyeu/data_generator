@@ -13,13 +13,11 @@ import java.util.stream.Collectors;
  * to get filtered data
  */
 final class FieldsCollection {
-    
-    
-    private List<ObjectField> fields;
 
-    public void newCollection() {
-        fields = new ArrayList<>();
-    }
+
+    private List<ObjectField> fields = new ArrayList<>();
+
+
     
     /**
      * Gets all declared fields

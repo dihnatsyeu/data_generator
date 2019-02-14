@@ -3,7 +3,7 @@ package data_for_entity.data_providers;
 /**
  * Basic interface that is used to generate random data.
  */
-public interface EntityDataProvider {
+public interface EntityDataProvider<T> {
     
-    Object generate(int length);
+    T generate(int length);
 }

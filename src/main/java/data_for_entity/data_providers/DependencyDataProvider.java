@@ -4,7 +4,7 @@ package data_for_entity.data_providers;
 /**
  * Abstract class is used to generate data that depends on other fields' values.
  */
-public abstract class DependencyDataProvider implements EntityDataProvider {
+public abstract class DependencyDataProvider<T> implements EntityDataProvider<T> {
     
     public void setDependencyData(DependencyData dependencyData) {
         this.dependencyData = dependencyData;
@@ -17,5 +17,5 @@ public abstract class DependencyDataProvider implements EntityDataProvider {
     }
     
     @Override
-    public abstract Object generate(int length);
+    public abstract T generate(int length);
 }

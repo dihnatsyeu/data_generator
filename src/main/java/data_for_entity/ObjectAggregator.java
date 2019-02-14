@@ -15,11 +15,12 @@ import java.util.*;
 class ObjectAggregator {
     
     private Logger logger = Logger.getLogger(ObjectAggregator.class);
-    private FieldsCollection fieldsCollection = new FieldsCollection();
+
     private InstanceManager instanceManager = new DefaultInstanceManager();
     private static List<Object> emptyValues = new ArrayList<>();
     static {
         emptyValues.add(0);
+        emptyValues.add(0L);
         emptyValues.add(null);
     }
     
@@ -36,7 +37,7 @@ class ObjectAggregator {
      * @return object of passed objectType with populated data.
      */
     Object generateObjectFields(Class<?> objectType) {
-        fieldsCollection.newCollection();
+        FieldsCollection fieldsCollection = new FieldsCollection();
         fieldsCollection.collectFieldsByType(objectType);
         List<ObjectField> requiredFields = fieldsCollection.createFieldsFilter().filterByRequired();
         Object instance = instanceManager.createInstance(objectType);
@@ -45,11 +46,12 @@ class ObjectAggregator {
         }
         TasksExecutor executor = new TasksExecutor();
         for (ObjectField objectField:requiredFields) {
-            FieldAggregator fieldAggregator = new FieldAggregator(objectField, instance);
+            FieldAggregator fieldAggregator = new FieldAggregator(objectField, instance, fieldsCollection);
             executor.submitTask(fieldAggregator);
             
         }
-        Boolean tasksCompleted = executor.waitForCompletion();
+        boolean tasksCompleted = executor.waitForCompletion();
+
         if (!tasksCompleted) {
             logger.warn("Not all fields are generated! View debug logs for details");
         }
@@ -65,8 +67,10 @@ class ObjectAggregator {
         private final ObjectField field;
         private Object instance;
         private FieldOptionsManager fieldOptions;
+        private FieldsCollection fieldsCollection;
         
-        FieldAggregator(ObjectField objectField, Object instance) {
+        FieldAggregator(ObjectField objectField, Object instance, FieldsCollection fieldsCollection) {
+            this.fieldsCollection = fieldsCollection;
             this.field = objectField;
             this.instance = instance;
             this.fieldOptions = new FieldOptionsManager(objectField.getField());
@@ -95,7 +99,7 @@ class ObjectAggregator {
                         return;
                     }
                     for (ObjectField field : dependenceFields) {
-                        new FieldAggregator(field, instance).run();
+                        new FieldAggregator(field, instance, fieldsCollection).run();
                         
                     }
                     
@@ -153,6 +157,7 @@ class ObjectAggregator {
         /**
          * Data generator class for container class fields.
          */
+        @SuppressWarnings("unchecked")
         private class CollectionFieldData extends FieldData {
     
             @Override
@@ -179,6 +184,7 @@ class ObjectAggregator {
         /**
          * Data generator class for container class fields(for Map).
          */
+        @SuppressWarnings("unchecked")
         private class MapFieldData extends FieldData {
             
             @Override

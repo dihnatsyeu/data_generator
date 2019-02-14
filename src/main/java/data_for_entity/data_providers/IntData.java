@@ -3,7 +3,7 @@ package data_for_entity.data_providers;
 
 import org.apache.commons.lang3.RandomUtils;
 
-public class IntData implements EntityDataProvider {
+public class IntData implements EntityDataProvider<Integer> {
 
     private boolean isShort;
     private boolean isByte;
@@ -12,17 +12,15 @@ public class IntData implements EntityDataProvider {
         this.isByte = isByte;
         this.isShort = isShort;
     }
-    
+
     @Override
-    public Object generate(int length) {
+    public Integer generate(int length) {
         int maxLength;
         if (isShort) {
-            maxLength =4;
-        }
-        else if (isByte) {
+            maxLength = 4;
+        } else if (isByte) {
             maxLength = 2;
-        }
-        else {
+        } else {
             maxLength = length;
         }
 
