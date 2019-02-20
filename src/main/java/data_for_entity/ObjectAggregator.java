@@ -53,7 +53,7 @@ class ObjectAggregator {
         boolean tasksCompleted = executor.waitForCompletion();
 
         if (!tasksCompleted) {
-            logger.warn("Not all fields are generated! View debug logs for details");
+            logger.debug("Not all fields are generated! View debug logs for details");
         }
         return instance;
     }
@@ -167,7 +167,7 @@ class ObjectAggregator {
                 try {
                     collection = (Collection) instanceManager.createInstance(objectClass);
                 } catch (Error er) {
-                    logger.error("Error occurred when creating instance of a collection. Might collection" +
+                    logger.debug("Error occurred when creating instance of a collection. Might collection" +
                             " is abstract or is an interface. Examine logs for further details." +
                             "You must declare exact implementation class as a type!");
                     return null;
